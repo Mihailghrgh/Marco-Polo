@@ -1,0 +1,71 @@
+export const data_Menu = [
+  {
+    data_Type: "Crime",
+    data_Location: ["London", "San Francisco", "Berlin", "Bucharest"],
+  },
+  {
+    data_Type: "Earthquake",
+    data_Location: ["Europe 2025", "Asia 2025", "America 2025", "Africa 2025"],
+  },
+  {
+    data_Type: "Rain",
+    data_Location: ["Europe 2025", "Asia 2025", "America 2025", "Africa 2025"],
+  },
+  {
+    data_Type: "Wind",
+    data_Location: ["Europe 2025", "Asia 2025", "America 2025", "Africa 2025"],
+  },
+];
+
+export const city_Crime_Choices = [
+  {
+    city: "London",
+    crimes: [
+      "ARSON AND CRIMINAL DAMAGE",
+      "BURGLARY",
+      "DRUG OFFENCES",
+      "MISCELLANEOUS CRIMES AGAINST SOCIETY",
+      "POSSESSION OF WEAPONS",
+      "PUBLIC ORDER OFFENCES",
+      "ROBBERY",
+      "SEXUAL OFFENCES",
+      "THEFT",
+      "VEHICLE OFFENCES",
+      "VIOLENCE AGAINST THE PERSON",
+      "FRAUD AND FORGERY",
+      "NFIB FRAUD",
+    ],
+  },
+  {
+    city: "San Francisco",
+    crimes: [
+      "Arson",
+      "Assault",
+      "Burglary",
+      "Disorderly conduct",
+      "Drug offense",
+      "Drug violation",
+      "Forgery and counterfeiting",
+      "Fraud",
+      "Gambling",
+      "Homicide",
+      "Larceny theft",
+      "Lost property",
+      "Miscellaneous investigation",
+      "Motor vehicle theft",
+      "Offences against the family and children",
+      "Other miscellaneous",
+      "Other offenses",
+      "Prostitution",
+      "Rape",
+      "Robbery",
+      "Sex offense",
+      "Stolen property",
+      "Traffic violation arrest",
+      "Vandalism",
+      "Warrant",
+      "Weapons carrying etc",
+      "Weapons offense",
+    ],
+  },
+];
