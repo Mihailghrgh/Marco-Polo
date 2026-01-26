@@ -18,3 +18,26 @@ env/
 *.swp
 *.swo
 
+=======
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Local crawler - not for GitHub
+backend_crawler/
+
+# Specific file
+supabase/db.py
+
+# Virtual environment
+venv/
+env/
+.env
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
