@@ -1,1 +1,20 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Specific file
 supabase/db.py
+
+# Virtual environment (if you have one)
+venv/
+env/
+.env
+
+# IDE files (optional)
+.vscode/
+.idea/
+*.swp
+*.swo
+
