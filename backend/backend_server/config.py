@@ -1,19 +1,25 @@
 from pydantic_settings import BaseSettings
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
 
 
-class Settings(BaseSettings):
-    DB_PASSWORD: str = (
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyanJtdWNqd3FrdHF0bXB2bm5rIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjEzMDI5NywiZXhwIjoyMDYxNzA2Mjk3fQ.ihgxcTh56tRSd7zaDIz8BflYAOcwZp5wLivBW5x-utM"
-    )
-    DATABASE_URL: str = "https://wrjrmucjwqktqtmpvnnk.supabase.co"
-    DIRECT_URL: str = (
-        "postgresql://postgres.wrjrmucjwqktqtmpvnnk:RCaV2UN1TH3tg1%23@aws-0-eu-central-1.pooler.supabase.com:5432/postgres?sslmode=require"
-    )
-    ANTHROPIC_BASE_URL: str = "https://api.deepseek.com/"
-    ANTHROPIC_API_KEY: str = "sk-0915a43c6496424d84fd91d087e42e58"
-    DEEPSEEK_BASE_URL: str = "https://api.deepseek.com/"
-    DEEPSEEK_API_KEY: str = "sk-0915a43c6496424d84fd91d087e42e58"
-    MAP_API: str = "yzax3zR8dQOlJDaNSDpK"
+class Settings:
+    DB_PASSWORD = os.getenv("DB_PASSWORD")
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    DIRECT_URL = os.getenv("DIRECT_URL")
+    MAP_API = os.getenv("MAP_API")
+
+    @staticmethod
+    def validate():
+        required = ["DB_PASSWORD", "DATABASE_URL", "DIRECT_URL", "MAP_API"]
+        missing = [key for key in required if not os.getenv(key)]
+        if missing:
+            raise EnvironmentError(f"Missing environment variables: {missing}")
 
 
 settings = Settings()
+settings.validate()
