@@ -148,9 +148,9 @@ export function AppSidebar() {
                     <span>Marco Polo</span>
                   </Button>
                   <div className="flex justify-between space-x-2">
-                    <TriangleAlertIcon/>
+                    <TriangleAlertIcon />
                     <p>TESTING ENVIRONMENT</p>
-                    <TriangleAlertIcon/>
+                    <TriangleAlertIcon />
                   </div>
                 </div>
               )}
@@ -218,7 +218,7 @@ export function AppSidebar() {
           <Separator className="border" />
         </SidebarHeader>
       </SidebarHeader>
-      <SidebarContent className="overflow-x-hidden px-2">
+      <SidebarContent className="overflow-x-hidden px-2 overflow-y-scrollbar scrollbar-hide">
         {state === "expanded" ? pageComponents[setPage] : null}
       </SidebarContent>
     </Sidebar>

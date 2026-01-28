@@ -19,7 +19,7 @@ function HeathMap() {
     const mapGL = new maplibregl.Map({
       container: containerRef.current,
       style: map_tile_layer.Dark,
-      center: [-122.43, 37.37],
+      center: [-0.1277, 51.5074],
       zoom: 6,
     });
 

@@ -48,29 +48,23 @@ import { useTheme } from "next-themes";
 function CityBoroughRank() {
   const { theme } = useTheme();
   const { crime_data } = useCrimeStore();
-  const { city , crime , date } = useSingleDrawerStore();
+  const { city, crime, date } = useSingleDrawerStore();
   const crime_Max_Queue = useMemo(() => {
     const crimes = crime_data.flat();
 
     const map = new Map<string, number>();
 
-    for (const [index, item] of Object.entries(crimes)) {
-      if (!map.get(item.borough_Name)) {
+    for (const item of crime_data) {
+      // Initialize if borough doesn't exist
+      if (!map.has(item.borough_Name)) {
         map.set(item.borough_Name, 0);
-        for (const [index, element] of Object.entries(item)) {
-          if (index.endsWith(date)) {
-            const amount =
-              Number(map.get(item?.borough_Name)) + Number(element);
-            map.set(item.borough_Name, amount);
-          }
-        }
-      } else {
-        for (const [index, element] of Object.entries(item)) {
-          if (index.endsWith(date)) {
-            const amount =
-              Number(map.get(item?.borough_Name)) + Number(element);
-            map.set(item.borough_Name, amount);
-          }
+      }
+
+      // Sum all properties that end with the date
+      for (const [key, value] of Object.entries(item)) {
+        if (key.endsWith(date)) {
+          const currentAmount = map.get(item.borough_Name) || 0;
+          map.set(item.borough_Name, currentAmount + Number(value));
         }
       }
     }

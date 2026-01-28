@@ -53,6 +53,11 @@ function MapStyleSideBar() {
             await ReloadPolygon();
           }
           break;
+        case "Polygon":
+          break;
+        case "Cluster":
+          /////Need to change the map style to a dark mode maybe ? 
+          break;
         default:
           break;
       }
@@ -86,6 +91,7 @@ function MapStyleSideBar() {
                   <Button
                     size="sm"
                     variant={mapDesign === "Default" ? "default" : "outline"}
+                    disabled
                     onClick={() => {
                       SetDesign("Default");
                       SetMapDesign("Default");
@@ -95,6 +101,7 @@ function MapStyleSideBar() {
                   </Button>
                   <Button
                     size="sm"
+                    disabled
                     variant={mapDesign === "Realistic" ? "default" : "outline"}
                     onClick={() => {
                       SetDesign("Realistic");
@@ -105,6 +112,7 @@ function MapStyleSideBar() {
                   </Button>
                   <Button
                     size="sm"
+                    disabled
                     variant={mapDesign === "Dark" ? "default" : "outline"}
                     onClick={() => {
                       SetDesign("Dark");
@@ -113,13 +121,7 @@ function MapStyleSideBar() {
                   >
                     Dark
                   </Button>
-                  {/* <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => CheckLayer()}
-                  >
-                    Check layers
-                  </Button> */}
+                 
                 </div>
               </div>
             </Card>

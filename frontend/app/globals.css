@@ -153,4 +153,13 @@
   .dark .bg-rank-1 {
     background-color: oklch(var(--valc) / 0.2);
   }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }

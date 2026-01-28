@@ -36,15 +36,15 @@ function CityCrimeDensity() {
   }, [crime_data, city, date]);
 
   const city_Area = city_Helpers.find((item) =>
-    item.city === city ? item : null
+    item.city === city ? item : null,
   );
 
   const crime_Density = Number(
     Math.ceil(
       (total_Crimes.amount /
         Number(city_Area?.population.replaceAll(",", ""))) *
-        1000
-    ).toFixed()
+        1000,
+    ).toFixed(),
   );
   const crimesPerSquare = Math.ceil(crime_Density / totalSquares);
   const getColorClass = (rate: number) => {
@@ -85,7 +85,7 @@ function CityCrimeDensity() {
 
         <div className="flex justify-between items-center text-center">
           <h1 className="text-sm font-medium text-muted-foreground ">
-            {crime_Density} crimes per km²
+            {Math.floor(crime_Density)} crimes per km²
           </h1>
           <h1 className="text-sm font-medium text-muted-foreground">
             Each square = {crimesPerSquare} crimes/km²

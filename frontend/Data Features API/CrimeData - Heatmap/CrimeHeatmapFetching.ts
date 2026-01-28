@@ -8,8 +8,6 @@ import type { Feature, Point } from "geojson";
 import { useActiveMapStore } from "@/store/store";
 import { useCrimeStore } from "@/store/store";
 import { useSingleDrawerStore } from "@/store/store";
-import { mousemoveHandlers } from "@/Data Features API/PolygonData/Map Type Helpers/handler";
-import { usePolygonCollectionStore } from "@/store/store";
 import { useMapStore } from "@/store/store";
 import { DestroyLayersAndSources } from "../CleanUp/DestroyAll";
 
@@ -44,6 +42,8 @@ async function CrimeHeatmapFetching({
       `${url}${endPoint?.request_Endpoint}`,
       config,
     );
+
+    console.log(data);
 
     //set the Crimes fetched for global store
     const addCrime = useCrimeStore.getState().addCrime;
@@ -114,9 +114,8 @@ function setHeatMapLayer(
       const heath_map_layer = heath_layer(layer_Name, source_Name);
       mapGl.addLayer(heath_map_layer);
 
+      const points = [];
       for (const [index, element] of Object.entries(heathmap_Prop)) {
-        const active_Source = mapGl?.getSource(source_Name) as GeoJSONSource;
-
         const point = createFeaturePoint(
           element.longitude,
           element.latitude,
@@ -125,8 +124,11 @@ function setHeatMapLayer(
           index,
         );
 
-        active_Source.updateData({ add: [point] });
+        points.push(point);
       }
+
+      const active_Source = mapGl?.getSource(source_Name) as GeoJSONSource;
+      active_Source.updateData({ add: [...points] });
 
       SetSources([source_Name]);
       SetLayers([layer_Name]);
@@ -174,8 +176,8 @@ function setHeatMapLayer(
       return true;
     }
   } catch (e) {
-    console.log(e , "Something went wrong");
-    return null
+    console.log(e, "Something went wrong");
+    return null;
   }
 }
 
@@ -189,13 +191,14 @@ function createFeaturePoint(
   const new_Longitude = Number(longitude) + (Math.random() - 0.5) * 0.01;
   const new_Latitude = Number(latitude) + (Math.random() - 0.5) * 0.01;
 
-  const coords = () => {
-    if (Number(index) % 2) {
-      return [new_Longitude, new_Latitude];
-    } else {
-      return [new_Longitude, new_Latitude];
-    }
-  };
+  //// ?????????????????? in what brain dead univers I wrote this magnificent code  ? ?????
+  // const coords = () => {
+  //   if (Number(index) % 2) {
+  //     return [new_Longitude, new_Latitude];
+  //   } else {
+  //     return [new_Longitude, new_Latitude];
+  //   }
+  // };
 
   const height = (amount: string) => {
     return Number(amount) < 50
@@ -215,7 +218,7 @@ function createFeaturePoint(
     },
     geometry: {
       type: "Point",
-      coordinates: coords(),
+      coordinates: [new_Longitude, new_Latitude],
     },
   };
 

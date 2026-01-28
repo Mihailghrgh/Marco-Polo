@@ -40,12 +40,14 @@ export type CrimeCollectionType = {
   type: string;
   crime_data: CrimeType[];
   addCrime: (crime: CrimeType) => void;
+  clearCrime: () => void;
 };
 
 export const useCrimeStore = create<CrimeCollectionType>()((set) => ({
   type: "CrimeCollection",
   crime_data: [],
   addCrime: (f) => set((state) => ({ crime_data: [...state.crime_data, f] })),
+  clearCrime: () => set((state) => ({ crime_data: [] })),
 }));
 
 export type MapCollectionType = {
@@ -65,7 +67,7 @@ export const useMapStore = create<MapCollectionType>()((set) => ({
   refresh_Map_Layers: [],
   setActiveSources: (f) => {
     set((state) => ({
-      refresh_Map_Sources: [...state.refresh_Map_Layers, ...f],
+      refresh_Map_Sources: [...state.refresh_Map_Sources, ...f],
     }));
   },
   setActiveLayers: (f) => {
@@ -91,12 +93,14 @@ type PolygonDataType = {
   type: string;
   data: PolygonType[];
   setPolygonData: (f: PolygonType[]) => void;
+  clearPolygon: () => void;
 };
 
 export const usePolygonCollectionStore = create<PolygonDataType>()((set) => ({
   type: "PolygonCollectionType",
   data: [],
   setPolygonData: (f) => set(() => ({ data: f })),
+  clearPolygon: () => set(() => ({ data: [] })),
 }));
 
 type ActiveMapType = {

@@ -10,7 +10,7 @@ export async function Extruded(
   borough_Name: string,
   polygon_Prop: PolygonType[],
   activeCrimeTypes: CrimeType[],
-  local_Layer: string
+  local_Layer: string,
 ) {
   const activeMapSource = useActiveMapStore.getState().active_Map_Source;
   const short_Data = (await map.getSource(activeMapSource)) as GeoJSONSource;
@@ -29,7 +29,7 @@ export async function Extruded(
   // Active Map Type (Extruded) and Layer (Extruded)
   const activeMapLayer = useActiveMapStore.getState().active_map_layer;
   const activeMapType = useActiveMapStore.getState().active_Map_Type;
-
+  map?.setPaintProperty(activeMapLayer, "fill-extrusion-opacity", 0);
   // Short Lived Source and Layer to Manipulate
   const setShortLivedMapSource =
     useActiveMapStore.getState().setShortLivedSource;
@@ -72,26 +72,11 @@ export async function Extruded(
   }
 
   //setting up the transition after the polygon is hovered / selected
-  for (const element of polygon_Prop) {
-    const other_Layer = `Polygon-Layer-${element.Borough_Name}`;
-
-    //FIRST SET THE LOCAL LIVING POLYGON LAYER TO 0,1 OPACITY
-    if (element.Borough_Name === borough_Name) {
-      map?.setPaintProperty(local_Layer, "fill-opacity", 0.1);
-    } else {
-      //SECOND , SET ALL THE OTHER POLYGON LAYERS TO THE DEFAULT OPACITY AND ACTIVE MAP LAYER (EXTRUDED) TO 0.1 OPACITY
-      //THIS WILL BE RESET WHEN HOVERING OUT OF THE POLYGON TO A NEW ONE OR TO NONE
-      map?.setPaintProperty(other_Layer, "fill-opacity", 0.5);
-      map?.setPaintProperty(activeMapLayer, "fill-extrusion-opacity", 0);
-    }
-  }
 }
 
 export function resetExtrudedTransition(
-  polygon_Prop: PolygonType[],
-  borough_Name: string,
   map: maplibregl.Map,
-  layer: string
+  borough_Name: string,
 ) {
   //setting the Data Map to Normal
   const active_map_layer = useActiveMapStore.getState().active_map_layer;
@@ -113,10 +98,4 @@ export function resetExtrudedTransition(
   }
 
   map?.setPaintProperty(active_map_layer, "fill-extrusion-opacity", 1);
-
-  for (const element of polygon_Prop) {
-    const other_Layer = `Polygon-Layer-${element.Borough_Name}`;
-    map?.setPaintProperty(other_Layer, "fill-opacity", 0.5);
-    map.getCanvas().style.cursor = "";
-  }
 }
