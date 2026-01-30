@@ -26,6 +26,9 @@ import CrimePolygonFetching from "@/Data Features API/CrimeData - Polygon/CrimeP
 import CrimeClusterFetching from "@/Data Features API/CrimeData -Cluster/CrimeClusterFetching";
 import { city_Helpers } from "@/helpers/city_Helpers";
 import { LngLatLike } from "maplibre-gl";
+import { AlertTriangleIcon } from "lucide-react";
+import { CardContent } from "@/components/ui/card";
+import { fail } from "assert";
 type Prop = {
   location: string;
 };
@@ -89,6 +92,7 @@ function CrimeSelectorMenu({ location }: Prop) {
 
   function SetDate(str: string) {
     setSelectionProp((state) => ({ ...state, date: str }));
+    useSetDate(str);
   }
   const [selectedMonth, setSelectedMonth] = useState<{
     year: number;
@@ -109,7 +113,7 @@ function CrimeSelectorMenu({ location }: Prop) {
   async function FetchData() {
     setReturnedData(false);
     setCityBtn(true);
-    setFailedFetch([]);
+    setFailedFetch(null);
     if (!selectionProp.crime || !selectionProp.date || !selectionProp.type) {
       const nullKey = Object.entries(selectionProp)
         .filter(([key, item]) => item === null)
@@ -344,38 +348,6 @@ function CrimeSelectorMenu({ location }: Prop) {
                     ))}
                   </div>
                 </div>
-
-                {/* 2025 */}
-                {/* <div>
-                  <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
-                    2025
-                  </h3>
-                  <div className="grid grid-cols-3 gap-2">
-                    {MONTHS_2025.map((month) => (
-                      <Button
-                        key={`2025-${month}`}
-                        variant={
-                          selectedMonth?.year === 2025 &&
-                          selectedMonth?.month === month
-                            ? "default"
-                            : "outline"
-                        }
-                        size="sm"
-                        onClick={() => {
-                          selectDate(2025, month);
-                          const setDate = month.concat("_2025");
-                          SetDate(setDate);
-                          setTimeout(() => {
-                            setIsOpenDate((item) => !item);
-                          }, 200);
-                        }}
-                        className="w-full"
-                      >
-                        {month}
-                      </Button>
-                    ))}
-                  </div>
-                </div> */}
               </div>
             </Card>
           </CollapsibleContent>
@@ -545,7 +517,26 @@ function CrimeSelectorMenu({ location }: Prop) {
           </div>
         )}
         <div className="mt-4 space-y-4">
-          {returnedData ?? <EmptyDataCard />}
+          {failedFetch && (
+            <div className="flex flex-col text-center ">
+              <div className="flex justify-center items-center">
+                <div className=" rounded-full p-2 mb-2">
+                  <AlertTriangleIcon className="w-8 h-8 text-red-700" />
+                </div>
+
+                <h3 className="text-center text-lg font-semibold tracking-tight mb-2">
+                  You haven't selected all the topics
+                </h3>
+              </div>
+              <div className="flex items-start">
+                <p className="text-left text-base font-medium tracking-tight text-muted-foreground pl-2">
+                  Please make sure to select a value for the following:{" "}
+                  {failedFetch.map((item) => item + " ")}
+                </p>
+              </div>
+            </div>
+          )}
+          {/* <EmptyDataCard /> */}
           <Button
             variant="default"
             className="w-full shadow-sm"
@@ -553,7 +544,6 @@ function CrimeSelectorMenu({ location }: Prop) {
           >
             View Data
           </Button>
-
           <Button
             variant="destructive"
             disabled={sources.length < 1 ? true : false}

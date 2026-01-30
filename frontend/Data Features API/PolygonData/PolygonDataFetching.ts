@@ -11,7 +11,7 @@ import {
 import { PolygonType } from "@/store/store";
 import { useActiveMapStore } from "@/store/store";
 import { useCrimeStore } from "@/store/store";
-import maplibregl, { Map } from "maplibre-gl";
+import maplibregl from "maplibre-gl";
 import { Heatmap, resetHeatmapTransition } from "./Map Type Helpers/Heatmap";
 import { Extruded, resetExtrudedTransition } from "./Map Type Helpers/Extruded";
 
@@ -64,6 +64,10 @@ async function setPolygonLayer(
 
     const active_map_layer = useActiveMapStore.getState().active_map_layer;
 
+    //max queue for hover effect
+    const date = useSingleDrawerStore.getState().date;
+    const crime_data = useCrimeStore.getState().crime_data;
+    const map = crime_Max_Queue(crime_data.flat(), date);
     //For event cleanup when switching maps
     const setMapListenerEvents =
       useMapListenerEvents.getState().setMapListenerEvents;
@@ -175,6 +179,8 @@ async function setPolygonLayer(
             marker?.remove();
             marker = null;
           }
+
+          const amount = map.get(element.Borough_Name);
           const point = mapGl.project(e.lngLat);
           point.y -= 15;
           const adjustedLngLat = mapGl.unproject(point);
@@ -186,9 +192,9 @@ async function setPolygonLayer(
           })
             .setHTML(
               `<div class="popup-content">
-                      <div class="text-md font-bold text-green-800">${element.Borough_Name}</div>
-                      <div class="text-md  text-black">Click to see more details</div>
-                          </div>`,
+                     <div class="text-lg font-bold text-green-800">Crimes: ${amount}</div>
+                     <div class="text-lg  text-black">Area: ${element.Borough_Name}</div>
+                         </div>`,
             )
             .setLngLat(adjustedLngLat)
             .addTo(mapGl);
@@ -224,6 +230,26 @@ async function setPolygonLayer(
     return new Error(`Something went wrong ${e} `);
   }
 }
+
+const crime_Max_Queue = (crime_data: CrimeType[], date: string) => {
+  const map = new Map<string, number>();
+  for (const item of crime_data) {
+    // Initialize if borough doesn't exist
+    if (!map.has(item.borough_Name)) {
+      map.set(item.borough_Name, 0);
+    }
+
+    // Sum all properties that end with the date
+    for (const [key, value] of Object.entries(item)) {
+      if (key.endsWith(date)) {
+        const currentAmount = map.get(item.borough_Name) || 0;
+        map.set(item.borough_Name, currentAmount + Number(value));
+      }
+    }
+  }
+
+  return map;
+};
 
 //Local Feature Point for Local Living Layer
 // function createFeaturePoint(

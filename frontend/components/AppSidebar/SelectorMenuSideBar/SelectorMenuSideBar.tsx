@@ -28,9 +28,9 @@ import CityDrawer from "@/components/DrawerContents/CityDrawer";
 import CrimeSelectorMenu from "./Crime/CrimeSelectorMenu";
 function SelectorMenuSideBar() {
   const isMobile = useIsMobile();
-  const [dataType, useSetDataType] = useState<string>("");
-  const [location, useSetLocation] = useState<string>("");
-  const [setActive, useSetActive] = useState<boolean>(false);
+  const [dataType, useSetDataType] = useState<string>("Crime");
+  const [location, useSetLocation] = useState<string>("London");
+  const [setActive, useSetActive] = useState<boolean>(true);
 
   function SetBreadCrumbs(str1: string, str2: string) {
     useSetActive(true);
@@ -43,12 +43,12 @@ function SelectorMenuSideBar() {
         <SidebarMenu>
           <div className="space-y-4 pb-2">
             <h1 className="text-center text-lg font-semibold tracking-tight">
-              Data Selection Menu
+              Select a Topic
             </h1>
-            <p className="text-left text-base font-medium tracking-tight text-muted-foreground">
+            {/* <p className="text-left text-base font-medium tracking-tight text-muted-foreground">
               Pick a topic from the menu to begin exploring the available data
               and heatmaps.
-            </p>
+            </p> */}
           </div>
           <SidebarMenuItem className=" flex justify-center items-center ">
             <NavigationMenu viewport={isMobile}>
@@ -60,7 +60,10 @@ function SelectorMenuSideBar() {
                       key={item.data_Type}
                       className="relative"
                     >
-                      <NavigationMenuTrigger className="h-10 rounded-lg text-sm font-medium shadow-none hover:bg-slate-200 hover:text-accent-foreground hover:cursor-pointer data-[state=closed]:bg-transparent">
+                      <NavigationMenuTrigger
+                        className="h-10 rounded-lg text-sm font-medium shadow-none hover:bg-slate-200 hover:text-accent-foreground hover:cursor-pointer data-[state=closed]:bg-transparent"
+                        disabled={item.data_Type === "Crime" ? false : true}
+                      >
                         {item.data_Type}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent className="mt-2 w-40 shadow-lg rounded border z-50 p-2 left-1/2 -translate-x-1/2">
@@ -72,6 +75,12 @@ function SelectorMenuSideBar() {
                                   <Button
                                     variant="ghost"
                                     className="w-full flex justify-start"
+                                    disabled={
+                                      location === "London" ||
+                                      location === "San Francisco"
+                                        ? false
+                                        : true
+                                    }
                                     onClick={() =>
                                       SetBreadCrumbs(item.data_Type, location)
                                     }

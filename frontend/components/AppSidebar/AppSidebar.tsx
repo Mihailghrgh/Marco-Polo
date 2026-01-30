@@ -62,50 +62,16 @@ const items = [
       "Allows you to choose and manage the specific datasets or items you want to work with.",
     smallTxt: "Select data to show.",
   },
-  {
-    title: "Map Style Menu",
-
-    icon: Map,
-    menuBtn: "MAP_STYLE",
-    description:
-      "Lets you specify which map style you want to show data selected on. Must select data first",
-    smallTxt: "Select different map styles.",
-  },
-  {
-    title: "Search Menu",
-
-    icon: Search,
-    menuBtn: "SEARCH_MENU",
-    description:
-      "Allows you to quickly find items, data, or features within the application.",
-    smallTxt: "Search for settings.",
-  },
-  {
-    title: "Settings Menu",
-
-    icon: Settings,
-    menuBtn: "SETTINGS_MENU",
-    description:
-      "Offers options to customize your preferences, app behavior, and display configurations.",
-    smallTxt: "Customize the app.",
-  },
 ];
 
 export function AppSidebar() {
   const { state, setOpen } = useSidebar();
-  type PageType =
-    | "MAIN_MENU"
-    | "MAP_STYLE"
-    | "SELECTOR_MENU"
-    | "SEARCH_MENU"
-    | "SETTINGS_MENU";
-  const [setPage, useSetPage] = useState<PageType>("MAIN_MENU");
+  type PageType = "MAIN_MENU" | "SELECTOR_MENU";
+
+  const [setPage, useSetPage] = useState<PageType>("SELECTOR_MENU");
   const pageComponents: Record<PageType, ReactNode> = {
     MAIN_MENU: <MainMenuSideBar />,
     SELECTOR_MENU: <SelectorMenuSideBar />,
-    MAP_STYLE: <MapStyleSideBar />,
-    SEARCH_MENU: <SearchMenuSideBar />,
-    SETTINGS_MENU: <SettingsMenuSideBar />,
   };
 
   function SetMenuOption(str: PageType) {
@@ -166,7 +132,7 @@ export function AppSidebar() {
               }`}
             >
               {items.map((item) => (
-                <HoverCard key={item.title}>
+                <HoverCard key={item.title} openDelay={25} closeDelay={100}>
                   <HoverCardTrigger
                     asChild
                     onPointerDown={(e) => e.preventDefault()}

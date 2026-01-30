@@ -1,8 +1,7 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios from "axios";
 import { crime_Endpoints } from "@/helpers/request_Helpers";
 import { CrimeType, PolygonType, useMapListenerEvents } from "@/store/store";
-import maplibregl, { Map } from "maplibre-gl";
-import { heath_layer } from "@/components/MapLayerTypes/map_layers";
+import maplibregl from "maplibre-gl";
 import { GeoJSONSource } from "maplibre-gl";
 import type { Feature, Point } from "geojson";
 import { useActiveMapStore } from "@/store/store";
@@ -186,6 +185,10 @@ async function CreateClusterType(
       const active_Source = map?.getSource(source_Name) as GeoJSONSource;
       active_Source.updateData({ add: [...points] });
     }
+    let marker: maplibregl.Popup | null = null;
+    const date = useSingleDrawerStore.getState().date;
+    const crime_data = useCrimeStore.getState().crime_data;
+    const amounts = crime_Max_Queue(crime_data.flat(), date);
     /// add the polygons for it
     for (const element of polygon_Data) {
       const source_Cluster = `Polygon-Invisible-Source-${element.Borough_Name}`;
@@ -261,6 +264,37 @@ async function CreateClusterType(
           setDrawerName(element.Borough_Name);
           setDrawer(true);
         });
+
+        map.on("mousemove", layer_Cluster, (e) => {
+          if (marker) {
+            marker?.remove();
+            marker = null;
+          }
+
+          const amount = amounts.get(element.Borough_Name);
+          const point = map.project(e.lngLat);
+          point.y -= 15;
+          const adjustedLngLat = map.unproject(point);
+
+          marker = new maplibregl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            className: "custom-popup",
+          })
+            .setHTML(
+              `<div class="popup-content">
+                             <div class="text-lg font-bold text-green-800">Crimes: ${amount}</div>
+                             <div class="text-lg  text-black">Area: ${element.Borough_Name}</div>
+                                 </div>`,
+            )
+            .setLngLat(adjustedLngLat)
+            .addTo(map);
+        });
+
+        map.on("mouseleave", layer_Cluster, () => {
+          marker?.remove() as maplibregl.Popup;
+          marker = null;
+        });
       } else {
         console.log(" Something went wrong if its not loading");
       }
@@ -272,6 +306,26 @@ async function CreateClusterType(
     return null;
   }
 }
+
+const crime_Max_Queue = (crime_data: CrimeType[], date: string) => {
+  const map = new Map<string, number>();
+  for (const item of crime_data) {
+    // Initialize if borough doesn't exist
+    if (!map.has(item.borough_Name)) {
+      map.set(item.borough_Name, 0);
+    }
+
+    // Sum all properties that end with the date
+    for (const [key, value] of Object.entries(item)) {
+      if (key.endsWith(date)) {
+        const currentAmount = map.get(item.borough_Name) || 0;
+        map.set(item.borough_Name, currentAmount + Number(value));
+      }
+    }
+  }
+
+  return map;
+};
 
 function setCrimeStore(data: CrimeType[], addCrime: (f: CrimeType) => void) {
   for (const value of data) {
