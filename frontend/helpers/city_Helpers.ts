@@ -1,8 +1,12 @@
+import { LngLat } from "maplibre-gl";
+
 export const city_Helpers = [
   {
     city: "London",
     population: "9,090,000",
     area: "1,572,000,000",
+    lng: 51.5074,
+    lat: 0.1278,
     boroughs: [
       {
         borough: "Barking and Dagenham",
@@ -99,7 +103,7 @@ export const city_Helpers = [
       { borough: "North Beach", population: "15,284", area: "492" },
       { borough: "Western Addition", population: "36,422", area: "1813" },
       { borough: "Golden Gate Park", population: "0", area: "4147" },
-      { borough: "Sunset/Parkside" , population: "81,000" , area: '14,000' },
+      { borough: "Sunset/Parkside", population: "81,000", area: "14,000" },
     ],
   },
   {

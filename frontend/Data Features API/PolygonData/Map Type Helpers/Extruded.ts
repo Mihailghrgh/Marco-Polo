@@ -29,7 +29,7 @@ export async function Extruded(
   // Active Map Type (Extruded) and Layer (Extruded)
   const activeMapLayer = useActiveMapStore.getState().active_map_layer;
   const activeMapType = useActiveMapStore.getState().active_Map_Type;
-  map?.setPaintProperty(activeMapLayer, "fill-extrusion-opacity", 0);
+  map?.setPaintProperty(activeMapLayer, "fill-extrusion-opacity", 0.2);
   // Short Lived Source and Layer to Manipulate
   const setShortLivedMapSource =
     useActiveMapStore.getState().setShortLivedSource;

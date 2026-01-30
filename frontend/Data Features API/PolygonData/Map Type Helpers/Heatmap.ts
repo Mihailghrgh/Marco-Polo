@@ -31,7 +31,7 @@ export async function Heatmap(
     useActiveMapStore.getState().setShortLivedSource;
   const setShortLivedMapLayer = useActiveMapStore.getState().setShortLivedLayer;
 
-  map?.setPaintProperty(activeMapLayer, "heatmap-opacity", 0);
+  map?.setPaintProperty(activeMapLayer, "heatmap-opacity", 0.2);
 
   //creating id and source for local map
   const local_id = `${activeMapType}-local-layer-${borough_Name}`;

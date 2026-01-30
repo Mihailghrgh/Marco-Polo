@@ -68,6 +68,7 @@ async function setPolygonLayer(
     const setMapListenerEvents =
       useMapListenerEvents.getState().setMapListenerEvents;
 
+    let marker: maplibregl.Popup | null = null;
     for (const element of polygon_Prop) {
       const source = `Polygon-Source-${element.Borough_Name}`;
       const layer = `Polygon-Layer-${element.Borough_Name}`;
@@ -125,7 +126,7 @@ async function setPolygonLayer(
 
         mapGl.on("mouseenter", layer, () => {
           mapGl.setPaintProperty(line, "line-opacity", 1);
-          mapGl.setPaintProperty(line, "line-width", 3);
+          mapGl.setPaintProperty(line, "line-width", 5);
           mapGl.getCanvas().style.cursor = "pointer";
           const activeMapType = useActiveMapStore.getState().active_Map_Type;
           switch (activeMapType) {
@@ -169,9 +170,40 @@ async function setPolygonLayer(
           }
         });
 
-        mapGl.on("mouseup", layer, () => {
-          useSetDrawerBorough(element.Borough_Name);
-          useSetDrawer(true);
+        mapGl.on("mousemove", layer, (e) => {
+          if (marker) {
+            marker?.remove();
+            marker = null;
+          }
+          const point = mapGl.project(e.lngLat);
+          point.y -= 15;
+          const adjustedLngLat = mapGl.unproject(point);
+
+          marker = new maplibregl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            className: "custom-popup",
+          })
+            .setHTML(
+              `<div class="popup-content">
+                      <div class="text-md font-bold text-green-800">${element.Borough_Name}</div>
+                      <div class="text-md  text-black">Click to see more details</div>
+                          </div>`,
+            )
+            .setLngLat(adjustedLngLat)
+            .addTo(mapGl);
+        });
+
+        mapGl.on("mouseleave", layer, () => {
+          marker?.remove() as maplibregl.Popup;
+          marker = null;
+        });
+
+        mapGl.on("mouseup", layer, (e) => {
+          if (e.originalEvent.button === 0) {
+            useSetDrawerBorough(element.Borough_Name);
+            useSetDrawer(true);
+          }
         });
 
         SetSources([source]);

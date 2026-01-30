@@ -1,5 +1,5 @@
 "use client";
-import HeathMap from "./Heatmap";
+import HeathMap from "./Map";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar/AppSidebar";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -10,7 +10,7 @@ function App({
   children: React.ReactNode;
 }>) {
   return (
-    <main >
+    <main>
       <HeathMap />
       <SidebarProvider
         style={

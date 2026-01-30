@@ -15,6 +15,7 @@ import {
 import { ChevronsUpDown } from "lucide-react";
 import { Separator } from "@radix-ui/react-separator";
 import {
+  useActiveMapStore,
   useCityDrawer,
   useMapListenerEvents,
   useMapStore,
@@ -23,6 +24,8 @@ import {
 import EmptyDataCard from "./CrimeWarning";
 import CrimePolygonFetching from "@/Data Features API/CrimeData - Polygon/CrimePolygonFetching";
 import CrimeClusterFetching from "@/Data Features API/CrimeData -Cluster/CrimeClusterFetching";
+import { city_Helpers } from "@/helpers/city_Helpers";
+import { LngLatLike } from "maplibre-gl";
 type Prop = {
   location: string;
 };
@@ -52,7 +55,8 @@ function CrimeSelectorMenu({ location }: Prop) {
 
   ///necessary values to fetch data Cuh if not Cuh you cant get stuff Cuh !
   const { useSetDate, date } = useSingleDrawerStore();
-
+  const { map } = useMapStore();
+  const sources = useMapStore((state) => state.refresh_Map_Sources);
   const MONTHS_2024 = [
     "jan",
     "feb",
@@ -122,10 +126,14 @@ function CrimeSelectorMenu({ location }: Prop) {
         });
 
         if (heatmapData) {
-          const heatmap_Polygon = await PolygonDataFetching(location);
-          console.log(heatmap_Polygon);
-
+          await PolygonDataFetching(location);
           setCityBtn(false);
+          const lnglat = city_Helpers.find((item) => item.city === location);
+          map?.flyTo({
+            center: [lnglat?.lat, lnglat?.lng] as LngLatLike,
+            zoom: 9,
+            essential: true,
+          });
         } else {
           setReturnedData(true);
         }
@@ -140,9 +148,13 @@ function CrimeSelectorMenu({ location }: Prop) {
 
         if (extrudedData) {
           const extruded_Polygon = await PolygonDataFetching(location);
-          console.log(extruded_Polygon);
-
           setCityBtn(false);
+          const lnglat = city_Helpers.find((item) => item.city === location);
+          map?.flyTo({
+            center: [lnglat?.lat, lnglat?.lng] as LngLatLike,
+            zoom: 9,
+            essential: true,
+          });
         } else {
           setReturnedData(true);
         }
@@ -157,6 +169,12 @@ function CrimeSelectorMenu({ location }: Prop) {
 
         if (polygonData) {
           setCityBtn(false);
+          const lnglat = city_Helpers.find((item) => item.city === location);
+          map?.flyTo({
+            center: [lnglat?.lat, lnglat?.lng] as LngLatLike,
+            zoom: 9,
+            essential: true,
+          });
         } else {
           setReturnedData(true);
         }
@@ -171,6 +189,12 @@ function CrimeSelectorMenu({ location }: Prop) {
 
         if (clusterData) {
           setCityBtn(false);
+          const lnglat = city_Helpers.find((item) => item.city === location);
+          map?.flyTo({
+            center: [lnglat?.lat, lnglat?.lng] as LngLatLike,
+            zoom: 9,
+            essential: true,
+          });
         } else {
           setReturnedData(true);
         }
@@ -532,7 +556,7 @@ function CrimeSelectorMenu({ location }: Prop) {
 
           <Button
             variant="destructive"
-            disabled={cityBtn}
+            disabled={sources.length < 1 ? true : false}
             className="w-full"
             onClick={() => setOpen(true)}
           >
